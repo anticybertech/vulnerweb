@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Vulnerability Disclosure Policy — LinCold™{% endblock %}
+{% block description %}LinCold™ Vulnerability Disclosure Policy: how to report security issues to Antibody Cyber Technology, scope, guidelines and safe harbor.{% endblock %}
+{% block content %}
+<article class="card doc">
+  <h1>Vulnerability Disclosure Policy</h1>
+  <p class="muted">Last updated: {{ cfg.POLICY_DATE }}</p>
+  <p><strong>{{ cfg.COMPANY }}</strong> welcomes reports from security researchers. If you believe you have found a
+    security vulnerability in LinCold™, please report it as described below. We'll work with you to understand and
+    resolve the issue quickly.</p>
+
+  <h2>How to report</h2>
+  <p>Email <a href="mailto:{{ cfg.SECURITY_EMAIL }}?subject=LinCold%20vulnerability%20report">{{ cfg.CONTACT_EMAIL_DISPLAY }}</a>
+    and include:</p>
+  <ul>
+    <li>A description of the vulnerability and its potential impact</li>
+    <li>The affected URL, endpoint or component</li>
+    <li>Step-by-step instructions to reproduce it (a proof of concept, screenshots or request/response samples)</li>
+    <li>Your name or handle, if you'd like to be credited</li>
+  </ul>
+  <p>A machine-readable contact is also published at <a href="{{ url_for('security_txt') }}">/.well-known/security.txt</a>.</p>
+
+  <h2>Scope</h2>
+  <ul>
+    <li>In scope: the LinCold™ web application at {{ cfg.SITE_URL }}</li>
+    <li>Out of scope: denial-of-service, volumetric or load testing; social engineering or phishing; physical attacks;
+      third-party services (for example, Stripe or AWS); reports from automated scanners that you haven't verified;
+      missing best-practice headers that have no demonstrated impact</li>
+  </ul>
+
+  <h2>Guidelines</h2>
+  <p>When you test, please:</p>
+  <ul>
+    <li>Use only accounts you created yourself, and don't access, modify or delete other users' data</li>
+    <li>Stop and report right away if you encounter personal or sensitive data</li>
+    <li>Don't degrade the Service or use the scanner to attack third-party systems</li>
+    <li>Give us reasonable time to fix the issue before you disclose it publicly. We ask for 90 days.</li>
+  </ul>
+
+  <h2>Our commitment</h2>
+  <ul>
+    <li>We'll acknowledge your report within 3 business days.</li>
+    <li>We'll send an initial assessment within 10 business days and keep you updated on our progress.</li>
+    <li>We'll credit you publicly, with your permission, once the issue is fixed.</li>
+  </ul>
+
+  <h2>Safe harbor</h2>
+  <p>We consider research conducted in good faith and in accordance with this policy to be authorized. We won't
+    pursue legal action against you or report you to law enforcement for it. If a third party takes legal action against
+    you for activities that complied with this policy, we'll make it known that your actions were authorized.</p>
+</article>
+{% endblock %}

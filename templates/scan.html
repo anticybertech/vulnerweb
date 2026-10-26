@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Scan {{ scan.host }} — LinCold™{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block content %}
+<div class="card scan-head" id="scan" data-status-url="{{ url_for('scan_status', scan_id=scan.id) }}" data-status="{{ scan.status }}">
+  <div>
+    <h2 class="mono">{{ scan.target }}</h2>
+    <div class="muted">{{ profile.label }} · queued {{ scan.created_at }}{% if scan.started_at %} · started {{ scan.started_at }}{% endif %}{% if scan.finished_at %} · finished {{ scan.finished_at }}{% endif %}</div>
+  </div>
+  <div class="scan-actions">
+    <span class="status status-{{ scan.status }}" id="status-pill">{{ scan.status }}</span>
+    {% if scan.status in ('queued','running') %}
+      <form method="post" action="{{ url_for('scan_cancel', scan_id=scan.id) }}" class="inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-ghost btn-sm">Cancel</button>
+      </form>
+    {% else %}
+      <a class="btn btn-sm" href="{{ url_for('scan_download', scan_id=scan.id) }}">Download HTML report</a>
+      <a class="btn btn-ghost btn-sm" href="{{ url_for('scan_json', scan_id=scan.id) }}">JSON</a>
+      <a class="btn btn-ghost btn-sm" href="{{ url_for('scan_report', scan_id=scan.id) }}" target="_blank" rel="noopener">Open full page</a>
+      <form method="post" action="{{ url_for('scan_delete', scan_id=scan.id) }}" class="inline" id="delete-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-danger btn-sm">Delete</button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+{% if scan.status in ('queued','running') %}
+<div class="card progress-card">
+  <div class="spinner"></div>
+  <div>
+    <h3 id="progress-title">{{ 'Waiting in queue…' if scan.status == 'queued' else 'Nuclei scan in progress…' }}</h3>
+    <p class="muted">Findings so far: <strong id="live-count">0</strong> · Elapsed: <span id="elapsed">0s</span></p>
+    <p class="muted small">You can leave this page — the scan keeps running and will appear in your dashboard.</p>
+  </div>
+</div>
+{% elif scan.status == 'failed' %}
+<div class="flash flash-error">Scan failed: {{ scan.error }}</div>
+{% endif %}
+
+{% if scan.status not in ('queued','running','failed') %}
+<iframe class="report-frame" src="{{ url_for('scan_report', scan_id=scan.id) }}" title="LinCold report"></iframe>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='scan.js') }}"></script>{% endblock %}

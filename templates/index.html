@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="hero-text">
+    <h1>LinCold™ Web Vulnerability Scanner</h1>
+    <p class="lead">Scan your websites for CVEs, misconfigurations, exposed panels and outdated software using
+      thousands of community-curated Nuclei templates — and get a branded <strong>LinCold™ AI Analysis Report</strong>
+      with risk ratings and prioritized recommendations.</p>
+    <div class="hero-cta">
+      {% if user %}
+        <a class="btn" href="{{ url_for('dashboard') }}">Go to dashboard</a>
+      {% else %}
+        <a class="btn" href="{{ url_for('register') }}">Start free — {{ cfg.FREE_SCANS_PER_MONTH }} scans/month</a>
+        <a class="btn btn-ghost" href="{{ url_for('pricing') }}">See pricing</a>
+      {% endif %}
+      <a class="btn btn-ghost" href="{{ url_for('sample_report') }}" target="_blank" rel="noopener">Sample report</a>
+    </div>
+  </div>
+  <img class="hero-logo" src="{{ url_for('static', filename='logo_hero.png', v=4) }}" alt="LinCold">
+</section>
+
+<section class="features">
+  <div class="card"><img class="feat-icon" src="{{ url_for('static', filename='icons/feat_nuclei_128.png') }}" alt="Nuclei vulnerability scanning" width="64" height="64"><h3>LinCold™-powered</h3><p>13,000+ templates covering CVEs, misconfigurations, exposures, default logins and technology fingerprinting.</p></div>
+  <div class="card"><img class="feat-icon" src="{{ url_for('static', filename='icons/feat_reports_128.png') }}" alt="Risk-rated security reports" width="64" height="64"><h3>Risk-rated reports</h3><p>Overall risk rating, severity breakdown, executive summary, findings and raw output — the same LinCold™ report format you know.</p></div>
+  <div class="card"><img class="feat-icon" src="{{ url_for('static', filename='icons/feat_recommend_128.png') }}" alt="Prioritized remediation recommendations" width="64" height="64"><h3>Actionable recommendations</h3><p>Every finding is mapped to concrete remediation guidance prioritized by severity.</p></div>
+  <div class="card"><img class="feat-icon" src="{{ url_for('static', filename='icons/feat_safe_128.png') }}" alt="Safe, rate-limited website scanning" width="64" height="64"><h3>Safe by design</h3><p>No DoS or brute-force templates, rate-limited requests, and private network targets blocked.</p></div>
+</section>
+
+<section class="section-center">
+  <h2>Scan profiles</h2>
+  <div class="profiles">
+    {% for key, p in profiles.items() %}
+    <div class="card"><h3>{{ p.label }}</h3><p>{{ p.description }}</p></div>
+    {% endfor %}
+  </div>
+  <p><a class="btn" href="{{ url_for('dashboard') if user else url_for('register') }}">Scan Now</a></p>
+</section>
+{% endblock %}

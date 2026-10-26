@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}LinCold™ Web Vulnerability Scanner{% endblock %}</title>
+{%- set page_desc %}{% block description %}Scan websites for CVEs, misconfigurations and exposed panels with LinCold. Get risk-rated reports and prioritized fixes. Free plan: 5 scans/month.{% endblock %}{% endset %}
+{%- set canonical = cfg.SITE_URL ~ request.path %}
+<meta name="description" content="{{ page_desc|trim }}">
+<meta name="robots" content="{% block robots %}index, follow{% endblock %}">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="{{ canonical }}">
+{%- if cfg.GOOGLE_SITE_VERIFICATION %}
+<meta name="google-site-verification" content="{{ cfg.GOOGLE_SITE_VERIFICATION }}">{% endif %}
+{%- if cfg.BING_SITE_VERIFICATION %}
+<meta name="msvalidate.01" content="{{ cfg.BING_SITE_VERIFICATION }}">{% endif %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LinCold™ Web Vulnerability Scanner">
+<meta property="og:title" content="{{ self.title()|trim }}">
+<meta property="og:description" content="{{ page_desc|trim }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:image" content="{{ cfg.SITE_URL }}{{ url_for('static', filename='logo_hero.png', v=4) }}">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{{ {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "LinCold Web Vulnerability Scanner",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Web",
+  "url": cfg.SITE_URL ~ "/",
+  "publisher": {"@type": "Organization", "name": cfg.COMPANY, "email": cfg.CONTACT_EMAIL_DISPLAY},
+  "offers": [{"@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD"},
+             {"@type": "Offer", "name": "Pro", "price": cfg.PRO_PRICE_USD, "priceCurrency": "USD"}]
+}|tojson }}</script>
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico', v=3) }}" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icon-192.png', v=3) }}">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png', v=3) }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=13) }}">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="{{ url_for('index') }}">
+    <img src="{{ url_for('static', filename='logo_nav.png', v=4) }}" alt="LinCold logo">
+    <span>LinCold<sup>™</sup><small>Web Vulnerability Scanner</small></span>
+  </a>
+  <div class="nav-skyline-wrap">
+    <img class="nav-skyline" src="{{ url_for('static', filename='huntsville-skyline-watermarked.webp', v=1) }}" alt="Huntsville skyline - Built in Huntsville, AL, USA" width="720" height="120">
+  </div>
+  <div class="nav-links">
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('pricing') }}">Pricing</a>
+    {% if user %}
+      <a href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('billing') }}">Billing</a>
+      <a href="{{ url_for('change_password') }}">Account</a>
+      {% if user.is_admin %}<a href="{{ url_for('admin') }}">Admin</a>{% endif %}
+      {% if user.is_admin %}<span class="plan-pill plan-admin">ADMIN</span>
+      {% else %}<span class="plan-pill plan-{{ user.plan }}">{{ 'PRO' if user.plan == 'pro' else 'FREE' }}</span>{% endif %}
+      <form method="post" action="{{ url_for('logout') }}" class="inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="link-btn">Log out</button>
+      </form>
+    {% else %}
+      <a href="{{ url_for('login') }}">Log in</a>
+      <a class="btn btn-sm" href="{{ url_for('register') }}">Start free</a>
+    {% endif %}
+  </div>
+</nav>
+
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}<div class="flashes">{% for cat, msg in messages %}<div class="flash flash-{{ cat }}">{{ msg }}</div>{% endfor %}</div>{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <nav class="footer-links">
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('pricing') }}">Pricing</a>
+    <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+    <a href="{{ url_for('disclosure') }}">Vulnerability Disclosure</a>
+  </nav>
+  LinCold™ &nbsp;|&nbsp; © 2026 <a href="https://antibodycyber.com" rel="noopener noreferrer" target="_blank">{{ cfg.COMPANY }}</a> &nbsp;|&nbsp; Powered by Nuclei
+  <div class="muted">Only scan systems you own or have written permission to test.</div>
+</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

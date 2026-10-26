@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Log in — LinCold™{% endblock %}
+{% block description %}Log in to LinCold™ Web Vulnerability Scanner.{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h1>Log in</h1>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Email<input type="email" name="email" required value="{{ request.form.email or '' }}"></label>
+    <label>Password<input type="password" name="password" required></label>
+    {% include "_recaptcha.html" %}
+    <button class="btn btn-block">Log in</button>
+  </form>
+  <p class="muted">New to LinCold™? <a href="{{ url_for('register') }}">Create a free account</a></p>
+</div>
+{% endblock %}

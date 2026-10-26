@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}About — LinCold™{% endblock %}
+{% block description %}About LinCold™, the Nuclei-powered web vulnerability scanner from Antibody Cyber Technology, LLC: what it tests, how scans stay safe, plans and contact.{% endblock %}
+{% block content %}
+<article class="card doc">
+  <h1>About LinCold™</h1>
+  <p class="lead">LinCold™ Web Vulnerability Scanner is a hosted security testing service from
+    <strong>{{ cfg.COMPANY }}</strong>. It helps website owners find known vulnerabilities, misconfigurations and
+    exposures before attackers do.</p>
+
+  <h2>What LinCold™ does</h2>
+  <p>LinCold™ uses <a href="https://github.com/projectdiscovery/nuclei" rel="noopener noreferrer" target="_blank">ProjectDiscovery Nuclei</a>
+    and its community-maintained template library to test a website for:</p>
+  <ul>
+    <li>Known CVEs in web servers, frameworks, CMS platforms and plugins</li>
+    <li>Security misconfigurations and missing HTTP security headers</li>
+    <li>Exposed administrative panels, files and sensitive endpoints</li>
+    <li>TLS/SSL weaknesses and outdated software versions</li>
+  </ul>
+  <p>Each scan produces a <strong>LinCold™ AI Analysis Report</strong>. The report includes an overall risk rating, a
+    severity breakdown, an executive summary, detailed findings, prioritized recommendations and the raw scanner output.</p>
+
+  <h2>Built to be safe</h2>
+  <ul>
+    <li>Scans exclude denial-of-service, fuzzing, brute-force and intrusive templates.</li>
+    <li>Requests are rate-limited to avoid overloading target servers.</li>
+    <li>Internal, private and cloud-metadata addresses can't be scanned.</li>
+    <li>Before each scan, you must confirm that you own the target or have written authorization to test it.</li>
+  </ul>
+
+  <h2>Plans</h2>
+  <p>The <strong>Free</strong> plan includes {{ cfg.FREE_SCANS_PER_MONTH }} scans per month. The <strong>Pro</strong>
+    plan includes unlimited scans for ${{ cfg.PRO_PRICE_USD }}/month. See <a href="{{ url_for('pricing') }}">Pricing</a>.</p>
+
+  <h2>Acceptable use</h2>
+  <p>Only scan systems that you own or are authorized in writing to test. Unauthorized scanning may be illegal. We
+    suspend accounts that scan targets without permission.</p>
+
+  <h2>Contact</h2>
+  <p>{{ cfg.COMPANY }} · <a href="mailto:{{ cfg.CONTACT_EMAIL }}">{{ cfg.CONTACT_EMAIL_DISPLAY }}</a></p>
+</article>
+{% endblock %}

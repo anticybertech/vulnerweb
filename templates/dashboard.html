@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — LinCold™{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block content %}
+<div class="dash-grid">
+  <div class="card stat">
+    <div class="stat-label">Scans this month</div>
+    {% if q.limit %}
+      <div class="stat-value">{{ q.used }} <span>/ {{ q.limit }}</span></div>
+      <progress class="meter" value="{{ q.used if q.used < q.limit else q.limit }}" max="{{ q.limit }}">{{ q.used }} of {{ q.limit }}</progress>
+      <div class="muted">{{ q.remaining }} free scan{{ '' if q.remaining == 1 else 's' }} left · <a href="{{ url_for('pricing') }}">Go unlimited</a></div>
+    {% else %}
+      <div class="stat-value">{{ q.used }} <span>/ ∞</span></div>
+      <div class="muted">Pro plan — unlimited scans</div>
+    {% endif %}
+  </div>
+  <div class="card stat"><div class="stat-label">Total scans</div><div class="stat-value">{{ stats.n }}</div></div>
+  <div class="card stat"><div class="stat-label">Total findings</div><div class="stat-value">{{ stats.t }}</div></div>
+  <div class="card stat"><div class="stat-label">Critical / High / Medium</div>
+    <div class="stat-value"><span class="c-crit">{{ stats.c }}</span> / <span class="c-high">{{ stats.h }}</span> / <span class="c-med">{{ stats.m }}</span></div></div>
+</div>
+
+<div class="card">
+  <h2>New scan</h2>
+  {% if q.can_scan %}
+  <form method="post" action="{{ url_for('create_scan') }}" class="scan-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="grow">Target URL or domain
+      <input name="target" placeholder="https://example.com" required maxlength="500" autofocus>
+    </label>
+    <label>Scan profile
+      <select name="profile">
+        {% for key, p in profiles.items() %}<option value="{{ key }}" title="{{ p.description }}">{{ p.label }}</option>{% endfor %}
+      </select>
+    </label>
+    <button class="btn">Start scan</button>
+    <label class="check">
+      <input type="checkbox" name="authorized" value="yes" required>
+      I own this target or have written authorization to perform security testing against it.
+    </label>
+  </form>
+  <details class="muted"><summary>About scan profiles</summary>
+    <ul>{% for key, p in profiles.items() %}<li><strong>{{ p.label }}</strong> — {{ p.description }}</li>{% endfor %}</ul>
+  </details>
+  {% else %}
+  <div class="upsell">
+    You've used all {{ q.limit }} free scans this month.
+    <form method="post" action="{{ url_for('checkout') }}" class="inline">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn">Upgrade to Pro — unlimited scans</button>
+    </form>
+  </div>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>Scan history</h2>
+  {% if scans %}
+  <table class="table">
+    <thead><tr><th>Target</th><th>Profile</th><th>Started</th><th>Status</th><th>Risk</th><th>Findings</th><th></th></tr></thead>
+    <tbody>
+    {% for s in scans %}
+      <tr>
+        <td class="mono">{{ s.target }}</td>
+        <td>{{ profile_for(s.profile).label }}</td>
+        <td>{{ s.started_at or s.created_at }}</td>
+        <td><span class="status status-{{ s.status }}">{{ s.status }}</span></td>
+        <td>{% if s.overall %}<span class="badge sev-{{ s.overall }}">{{ s.overall|upper }}</span>{% else %}—{% endif %}</td>
+        <td>{% if s.status in ('completed','cancelled') %}<span class="c-crit">{{ s.critical }}</span>/<span class="c-high">{{ s.high }}</span>/<span class="c-med">{{ s.medium }}</span>/<span class="c-low">{{ s.low }}</span>/<span class="c-info">{{ s.info }}</span>{% else %}—{% endif %}</td>
+        <td><a href="{{ url_for('scan_detail', scan_id=s.id) }}">View</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p class="muted small">Findings: critical / high / medium / low / info</p>
+  {% else %}
+  <p class="muted">No scans yet. Start your first scan above.</p>
+  {% endif %}
+</div>
+{% endblock %}

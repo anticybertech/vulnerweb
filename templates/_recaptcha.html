@@ -1,0 +1,5 @@
+{% if cfg.RECAPTCHA_ENABLED %}
+<div class="recaptcha"><div class="g-recaptcha" data-sitekey="{{ cfg.RECAPTCHA_SITE_KEY }}" data-theme="dark"></div></div>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<noscript><p class="muted">JavaScript is required to complete the “I'm not a robot” check.</p></noscript>
+{% endif %}

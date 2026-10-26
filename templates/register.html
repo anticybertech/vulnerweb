@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Create account — LinCold™{% endblock %}
+{% block description %}Create a free LinCold™ account and run 5 web vulnerability scans per month with Nuclei and AI risk reports.{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h1>Create your LinCold™ account</h1>
+  <p class="muted">Free plan includes {{ cfg.FREE_SCANS_PER_MONTH }} scans per month.</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Name<input name="name" required maxlength="80" value="{{ request.form.name or '' }}"></label>
+    <label>Email<input type="email" name="email" required value="{{ request.form.email or '' }}"></label>
+    <label>Password<input type="password" name="password" required minlength="8"></label>
+    <label>Confirm password<input type="password" name="confirm" required minlength="8"></label>
+    {% include "_recaptcha.html" %}
+    <button class="btn btn-block">Create account</button>
+  </form>
+  <p class="muted">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy — LinCold™{% endblock %}
+{% block description %}LinCold™ Privacy Policy: what data the web vulnerability scanner collects, how it is used and protected, and your rights.{% endblock %}
+{% block content %}
+<article class="card doc">
+  <h1>Privacy Policy</h1>
+  <p class="muted">Last updated: {{ cfg.POLICY_DATE }}</p>
+  <p>This policy explains how <strong>{{ cfg.COMPANY }}</strong> ("we", "us") collects, uses and protects information
+    when you use the LinCold™ Web Vulnerability Scanner at {{ cfg.SITE_URL }} (the "Service").</p>
+
+  <h2>1. Information we collect</h2>
+  <ul>
+    <li><strong>Account information:</strong> your name, email address and password. Passwords are stored only as
+      salted cryptographic hashes; we never store the original password.</li>
+    <li><strong>Scan data:</strong> the target URLs you submit, the scan profile, timestamps, and the results that the
+      scanner returns, including generated reports.</li>
+    <li><strong>Billing information:</strong> if you subscribe to Pro, payment is processed by our payment provider
+      (Stripe). We store only the subscription reference, plan and payment history. We never receive or store
+      your full card number.</li>
+    <li><strong>Technical data:</strong> IP addresses and request logs that our servers record for security, abuse
+      prevention and troubleshooting. We use one session cookie to keep you logged in and to protect forms
+      against cross-site request forgery.</li>
+  </ul>
+
+  <h2>2. How we use information</h2>
+  <ul>
+    <li>To provide the Service: running scans, generating reports and keeping your scan history</li>
+    <li>To manage your account, plan limits and subscription</li>
+    <li>To secure the Service, prevent abuse and investigate unauthorized scanning</li>
+    <li>To contact you about your account, security issues or material changes to this policy</li>
+  </ul>
+  <p>We don't sell your personal information or use it for advertising.</p>
+
+  <h2>3. Scan results are confidential</h2>
+  <p>Only you can see your scan results and reports, plus authorized LinCold™ administrators when they need access for
+    support, security or abuse investigations. We never publish or share your results.</p>
+
+  <h2>4. Sharing</h2>
+  <p>We share information only with service providers that help us operate the Service, such as cloud hosting
+    (Amazon Web Services) and payment processing (Stripe). We also share it when the law requires or to protect the
+    rights, safety and security of our users, the public or us.</p>
+
+  <h2>5. Data retention</h2>
+  <p>We keep account data while your account is active. When you delete a scan, we remove its results and report files;
+    we keep a minimal record to enforce monthly scan limits. To delete your account and associated data, email us at
+    the address below.</p>
+
+  <h2>6. Security</h2>
+  <p>We protect data with TLS encryption in transit, hashed passwords, CSRF protection, strict content security
+    policies and restricted server access. No system is perfectly secure. If you find a security issue, please follow
+    our <a href="{{ url_for('disclosure') }}">Vulnerability Disclosure Policy</a>.</p>
+
+  <h2>7. Your rights</h2>
+  <p>Depending on where you live, you may have the right to access, correct, delete or export your personal information,
+    or to object to certain processing. To make a request, contact us at the address below. We'll respond within 30
+    days.</p>
+
+  <h2>8. Children</h2>
+  <p>The Service is not intended for anyone under 18. We don't knowingly collect information from children.</p>
+
+  <h2>9. Changes</h2>
+  <p>We may update this policy from time to time. If we make material changes, we'll post them on this page and update
+    the "Last updated" date.</p>
+
+  <h2>10. Contact</h2>
+  <p>{{ cfg.COMPANY }} · <a href="mailto:{{ cfg.CONTACT_EMAIL }}">{{ cfg.CONTACT_EMAIL_DISPLAY }}</a></p>
+</article>
+{% endblock %}

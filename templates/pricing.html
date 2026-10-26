@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Pricing — LinCold™{% endblock %}
+{% block description %}LinCold™ pricing: Free plan with 5 web vulnerability scans per month, or Pro with unlimited Nuclei scans and LinCold™ AI analysis reports.{% endblock %}
+{% block content %}
+<section class="section-center">
+  <h1>Simple pricing</h1>
+  <p class="lead">Start free. Upgrade when you need unlimited scanning.</p>
+  <div class="pricing">
+    <div class="price-card">
+      <h2>Free</h2>
+      <div class="price">$0<span>/month</span></div>
+      <ul>
+        <li>✔ <strong>{{ cfg.FREE_SCANS_PER_MONTH }} scans per month</strong></li>
+        <li>✔ All scan profiles (Auto, Quick, Standard &amp; PHP, Full)</li>
+        <li>✔ LinCold™ AI Analysis HTML reports</li>
+        <li>✔ JSON export</li>
+        <li>✔ Scan history</li>
+      </ul>
+      {% if not user %}<a class="btn btn-ghost" href="{{ url_for('register') }}">Create free account</a>
+      {% elif user.plan == 'free' %}<span class="current">Current plan</span>{% endif %}
+    </div>
+    <div class="price-card featured">
+      <div class="ribbon">Most popular</div>
+      <h2>Pro</h2>
+      <div class="price">${{ cfg.PRO_PRICE_USD }}<span>/month</span></div>
+      <ul>
+        <li>✔ <strong>Unlimited scans</strong></li>
+        <li>✔ Everything in Free</li>
+        <li>✔ Re-scan targets as often as you need</li>
+        <li>✔ Priority support from Antibody Cyber</li>
+        <li>✔ Cancel anytime</li>
+      </ul>
+      {% if not user %}<a class="btn" href="{{ url_for('register') }}">Sign up, then upgrade</a>
+      {% elif user.plan == 'pro' %}<span class="current">Current plan</span>
+      {% else %}
+      <form method="post" action="{{ url_for('checkout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn">Upgrade to Pro</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

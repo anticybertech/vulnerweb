@@ -1,0 +1,37 @@
+[Unit]
+Description=LinCold Web Vulnerability Scanner
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lincold
+Group=lincold
+WorkingDirectory=/opt/lincold
+Environment=HOME=/var/lib/lincold
+Environment=LINCOLD_DATA_DIR=/var/lib/lincold/data
+Environment=LINCOLD_HOST=127.0.0.1
+Environment=LINCOLD_PORT=5055
+Environment=LINCOLD_BEHIND_PROXY=1
+Environment=LINCOLD_DEMO_BILLING=0
+Environment=LINCOLD_NUCLEI_BIN=/usr/local/bin/nuclei
+EnvironmentFile=-/etc/lincold/lincold.env
+ExecStart=/opt/lincold/.venv/bin/python app.py
+Restart=on-failure
+RestartSec=5
+KillMode=mixed
+TimeoutStopSec=20
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/lincold
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

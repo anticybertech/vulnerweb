@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Checkout — LinCold™ Pro{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h1>Upgrade to LinCold™ Pro</h1>
+  <div class="price">${{ cfg.PRO_PRICE_USD }}<span>/month</span></div>
+  <ul class="plain">
+    <li>✔ Unlimited scans</li>
+    <li>✔ All scan profiles and reports</li>
+  </ul>
+  <div class="flash flash-info">
+    <strong>Demo billing mode.</strong> No payment is collected on this localhost install.
+    Set <code>STRIPE_SECRET_KEY</code> and <code>STRIPE_PRICE_ID</code> to enable real Stripe Checkout.
+  </div>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn btn-block">Activate Pro (demo)</button>
+  </form>
+  <p class="muted"><a href="{{ url_for('pricing') }}">Back to pricing</a></p>
+</div>
+{% endblock %}

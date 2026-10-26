@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Admin — LinCold™{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block content %}
+<div class="dash-grid">
+  <div class="card stat"><div class="stat-label">Users</div><div class="stat-value">{{ stats.users }}</div></div>
+  <div class="card stat"><div class="stat-label">Pro users</div><div class="stat-value">{{ stats.pro }}</div></div>
+  <div class="card stat"><div class="stat-label">Total scans</div><div class="stat-value">{{ stats.scans }}</div></div>
+  <div class="card stat"><div class="stat-label">Active scans</div><div class="stat-value">{{ stats.active }}</div></div>
+</div>
+
+<div class="card">
+  <h2>Users</h2>
+  <table class="table">
+    <thead><tr><th>Email</th><th>Name</th><th>Plan</th><th>Role</th><th>Scans (month / total)</th><th>Joined</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for u in users %}
+      <tr>
+        <td class="mono">{{ u.email }}</td>
+        <td>{{ u.name }}</td>
+        <td><span class="plan-pill plan-{{ u.plan }}">{{ u.plan|upper }}</span></td>
+        <td>{% if u.is_admin %}<span class="plan-pill plan-admin">ADMIN</span>{% else %}User{% endif %}</td>
+        <td>{{ u.month_scans }} / {{ u.total_scans }}</td>
+        <td>{{ u.created_at }}</td>
+        <td class="admin-actions">
+          <form method="post" action="{{ url_for('admin_update_user', uid=u.id) }}" class="inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if u.plan == 'pro' %}<button class="btn btn-sm btn-ghost" name="action" value="set_free">Set Free</button>
+            {% else %}<button class="btn btn-sm" name="action" value="set_pro">Set Pro</button>{% endif %}
+            {% if u.is_admin %}{% if u.id != user.id %}<button class="btn btn-sm btn-ghost" name="action" value="revoke_admin">Revoke admin</button>{% endif %}
+            {% else %}<button class="btn btn-sm btn-ghost" name="action" value="grant_admin">Make admin</button>{% endif %}
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>All scans</h2>
+  {% if scans %}
+  <table class="table">
+    <thead><tr><th>User</th><th>Target</th><th>Profile</th><th>Started</th><th>Status</th><th>Risk</th><th></th></tr></thead>
+    <tbody>
+    {% for s in scans %}
+      <tr>
+        <td class="mono">{{ s.email }}</td>
+        <td class="mono">{{ s.target }}</td>
+        <td>{{ profile_for(s.profile).label }}</td>
+        <td>{{ s.started_at or s.created_at }}</td>
+        <td><span class="status status-{{ s.status }}">{{ s.status }}</span></td>
+        <td>{% if s.overall %}<span class="badge sev-{{ s.overall }}">{{ s.overall|upper }}</span>{% else %}—{% endif %}</td>
+        <td><a href="{{ url_for('scan_detail', scan_id=s.id) }}">View</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<p class="muted">No scans yet.</p>{% endif %}
+</div>
+{% endblock %}
